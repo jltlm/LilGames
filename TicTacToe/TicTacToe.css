@@ -1,6 +1,12 @@
-.game {
+.tile {
     height: 100px;
     width: 100px;
     border: 1rem;
     margin: .2rem;
+    background-color: rgb(206, 211, 216);
+    font-size: large;
+}
+
+.tile:hover {
+    background-color: rgb(119, 136, 153);
 }
