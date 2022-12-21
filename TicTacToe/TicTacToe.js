@@ -135,6 +135,7 @@ let game = new Game();
 let moves = document.getElementById("moves");
 let messages = document.getElementById("messages");
 let reset = document.getElementById("newGame");
+let currPlayer = document.getElementById("currPlayer");
 let buttons = [];
 makeButtons();
 
@@ -157,10 +158,12 @@ function aButton(i, j) {
 
         let m = game.makeMove(i, j);
 
+        button.classList.add("chosen");
         button.textContent = m;
         messages.textContent = "Messages: " + game.getMessages();
         debug.textContent = game.displayBoard();
         moves.textContent = "Move count: " + game.moves;
+        currPlayer.textContent = "Current Player: " + game.user;
     });
 
 }
@@ -179,9 +182,14 @@ function start() {
     while (tiles.length > 0) {
         tiles[0].classList.remove("winner");
     }
+    tiles = document.getElementsByClassName("chosen");
+    while (tiles.length > 0) {
+        tiles[0].classList.remove("chosen");
+    }
     console.log(game.complete);
     document.getElementById("debug").textContent = game.displayBoard();
     moves.textContent = "Move count: " + game.moves;
+    currPlayer.textContent = "Current Player: X";
     messages.textContent = "Messages: " + game.getMessages();
     buttons.forEach(element => element.textContent = ".");
 }
