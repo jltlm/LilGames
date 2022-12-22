@@ -1,6 +1,21 @@
-.game {
+.tile {
     height: 100px;
     width: 100px;
-    border: 1rem;
     margin: .2rem;
+    background-color: rgb(206, 211, 216);
+    font-size: large;
+    border-color: rgb(151, 151, 151);
+    border-width: 5px;
+}
+
+.tile:hover {
+    background-color: rgb(0, 255, 157);
+}
+
+.chosen {
+    background-color: rgb(210, 255, 255);
+    pointer-events: none;
+}
+.winner {
+    background-color: red;
 }
