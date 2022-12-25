@@ -1,0 +1,19 @@
+.board {
+    display: flex;
+}
+
+.tile {
+    margin: 1px;
+    width: 40px;
+    height: 40px;
+    background-color: lightskyblue;
+    display: inline-block;
+}
+
+.snakeBody {
+    background-color: green;
+}
+
+.snakeHead {
+    border: 1px;
+}
