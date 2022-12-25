@@ -165,16 +165,20 @@ function aButton(i, j) {
             return;
         }
         buttons.push(button);
-
-        let m = game.makeMove(i, j);
-
-        button.classList.add("chosen");
-        button.textContent = m;
-        messages.textContent = "Messages: " + game.getMessages();
-        debug.textContent = game.displayBoard();
-        moves.textContent = "Move count: " + game.moves;
-        currPlayer.textContent = "Current Player: " + game.user;
+        tileSelected(i, j);
     });
+
+}
+
+function tileSelected(i, j) {
+    let button = document.getElementById(`${i}${j}`);
+    button.classList.add("chosen");
+    button.textContent = m;
+    let m = game.makeMove(i, j);
+    messages.textContent = "Messages: " + game.getMessages();
+    debug.textContent = game.displayBoard();
+    moves.textContent = "Move count: " + game.moves;
+    currPlayer.textContent = "Current Player: " + game.user;
 
 }
 
