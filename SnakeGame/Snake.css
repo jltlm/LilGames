@@ -1,5 +1,10 @@
 .board {
     display: flex;
+    box-sizing: border-box;
+}
+
+.row {
+    height: 42px;
 }
 
 .tile {
