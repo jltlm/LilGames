@@ -15,10 +15,10 @@
     display: inline-block;
 }
 
-.snakeBody {
-    background-color: green;
+.apple {
+    background-color: red;
 }
 
-.snakeHead {
-    border: 1px;
+.snakeBody {
+    background-color: green;
 }
