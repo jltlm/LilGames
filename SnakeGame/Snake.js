@@ -1,7 +1,11 @@
 class Snake {
     constructor(game) {
         this.game = game;
+
+        // direction the snake is facing
         this.direction = "R";
+
+        // the queue containing all the snake body parts locations
         this.squeue = new Queue();
         this.head = [2, 3];
         // start off as a 3 unit long snake
@@ -9,41 +13,54 @@ class Snake {
         this.squeue.enqueue([2, 2]);
         this.squeue.enqueue([2, 3]);
         this.appleCount = 0;
+
+        // the input from the user
         this.input = "R";
 
         pageCounter.textContent = "Apples Eaten: " + this.appleCount;
     }
 
     move() {
-        let dir = this.direction;
-        if (this.input == "R" && dir == "L"
-            || this.input == "L" && dir == "R"
-            || this.input == "U" && dir == "D"
-            || this.input == "D" && dir == "U") {
-        } else {
+        // checks for if user presses on opposite side key
+        // (snake can't turn opposite direction)
+        if ((this.input != "R" && this.direction == "L"
+            || this.input != "L" && this.direction == "R"
+            || this.input != "U" && this.direction == "D"
+            || this.input != "D" && this.direction == "U")
+            && this.input != null) {
             this.direction = this.input;
         }
-        dir = this.direction;
 
-        if (dir == "R") {
-            this.squeue.enqueue([this.head[0], this.head[1] + 1]);
-            this.head = [this.head[0], this.head[1] + 1];
-        } else if (dir == "U") {
-            this.squeue.enqueue([this.head[0] - 1, this.head[1]]);
-            this.head = [this.head[0] - 1, this.head[1]];
-        } else if (dir == "L") {
-            this.squeue.enqueue([this.head[0], this.head[1] - 1]);
-            this.head = [this.head[0], this.head[1] - 1];
-        } else if (dir == "D") {
-            this.squeue.enqueue([this.head[0] + 1, this.head[1]]);
-            this.head = [this.head[0] + 1, this.head[1]];
+        // gets the next tile (in the direction the snake's facing)
+        let [hx, hy] = this.head;
+        switch (this.direction) {
+            case "R":
+                this.squeue.enqueue([hx, hy + 1]);
+                this.head = [hx, hy + 1];
+                break;
+
+            case "U":
+                this.squeue.enqueue([hx - 1, hy]);
+                this.head = [hx - 1, hy];
+                break;
+
+            case "L":
+                this.squeue.enqueue([hx, hy - 1]);
+                this.head = [hx, hy - 1];
+                break;
+
+            case "D":
+                this.squeue.enqueue([hx + 1, hy]);
+                this.head = [hx + 1, hy];
+                break;
         }
         let tail;
 
         // check if apple is eaten
-        let apple = game.apple;
-        if (this.head[0] == apple[0] && this.head[1] == apple[1]) {
-            tiles[apple[0]][apple[1]].classList.remove("apple");
+        [hx, hy] = this.head;
+        let [ax, ay] = game.apple;
+        if (hx == ax && hy == ay) {
+            tiles[ax][ay].classList.remove("apple");
             this.appleCount++;
             this.game.apple = game.newAppleLoc();
             pageCounter.textContent = "Apples Eaten: " + this.appleCount;
@@ -55,29 +72,35 @@ class Snake {
     }
 }
 
+const GameStates = {
+    NOT_STARTED: "Game not started yet",
+    STARTED: "Game is in play",
+    ENDED: "Game has ended"
+}
+
 class Game {
     constructor(n) {
         this.n = n;
+        this.ticInterval = 200;
     }
 
     reset() {
-        this.board = [];
-        for (let i = 0; i < this.n; i++) {
-            let row = [];
-            for (let j = 0; j < this.n; j++) {
-                row.push('-');
-            }
-            this.board.push(row);
-        }
+        this.board = [...new Array(this.n)].map(() => new Array(this.n).fill("-"));
+        // for (let i = 0; i < this.n; i++) {
+        //     let row = ;
+        //     this.board.push(row);
+        // }
 
         this.snake = new Snake(this);
-        this.gameState = "NOT_STARTED";
+        this.gameState = GameStates.NOT_STARTED;
 
         // reset tiles on page
         let allTiles = document.getElementsByClassName("snakeBody");
-        while (allTiles.length > 0) {
-            allTiles[0].classList.remove("snakeBody");
-        }
+        [...allTiles].forEach(e => e.classList.remove("snakeBody"));
+        // while (allTiles.length > 0) {
+        //     allTiles[0].classList.remove("snakeBody");
+        // }
+
         let appleTiles = document.getElementsByClassName("apple");
         while (appleTiles.length > 0) {
             appleTiles[0].classList.remove("apple");
@@ -86,15 +109,18 @@ class Game {
         this.apple = this.newAppleLoc();
         this.debug();
 
+        // keeps the interval to clear it at end of game,
+        // otherwise game speeds up on each reset
+        // use function() so it's for the snake and not hte window...?
         this.interval = setInterval(function () {
             game.snake.move();
-        }, 200);
+        }, this.ticInterval);
 
         pageMessages.innerHTML = "Game State: " + game.gameState;
     }
 
     newAppleLoc() {
-        let loc = [Math.round(Math.random() * (this.n - 1)), Math.round(Math.random() * (this.n - 1))];
+        let loc = [Math.floor(Math.random() * this.n), Math.floor(Math.random() * this.n)];
         if (this.board[loc[0]][loc[1]] != "-") {
             return this.newAppleLoc();
         }
@@ -116,7 +142,7 @@ class Game {
     end() {
         clearInterval(this.interval);
         console.log("Apples collected: " + this.snake.appleCount);
-        this.gameState = "ENDED";
+        this.gameState = GameStates.ENDED;
         pageMessages.innerHTML = "Game State: " + this.gameState;
     }
 
@@ -177,21 +203,21 @@ let game = new Game(boardSize);
 
 // can use a map to hold all currently pressed keys instead
 window.addEventListener("keydown", (event) => {
-    if (game.gameState === "IN_PLAY") {
+    if (game.gameState === GameStates.STARTED) {
         let dir;
 
         // gets snake's current direction
         switch (event.key) {
-            case "w":
+            case "ArrowUp":
                 dir = "U";
                 break;
-            case "a":
+            case "ArrowLeft":
                 dir = "L";
                 break;
-            case "s":
+            case "ArrowDown":
                 dir = "D";
                 break;
-            case "d":
+            case "ArrowRight":
                 dir = "R";
                 break;
         }
@@ -201,7 +227,9 @@ window.addEventListener("keydown", (event) => {
 
 function start() {
     game.reset();
-    game.gameState = "IN_PLAY";
+    game.gameState = GameStates.STARTED;
     pageMessages.innerHTML = "Game State: " + game.gameState;
 }
 
+// make sure not every key murders snake
+// 

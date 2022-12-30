@@ -32,5 +32,4 @@ Queue.prototype.dequeue = function () {
     return temp;
 };
 
-
 //   https://stackoverflow.com/a/23573210/6622395
