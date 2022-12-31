@@ -35,25 +35,22 @@ class Snake {
         let [hx, hy] = this.head;
         switch (this.direction) {
             case "R":
-                this.squeue.enqueue([hx, hy + 1]);
                 this.head = [hx, hy + 1];
                 break;
 
             case "U":
-                this.squeue.enqueue([hx - 1, hy]);
                 this.head = [hx - 1, hy];
                 break;
 
             case "L":
-                this.squeue.enqueue([hx, hy - 1]);
                 this.head = [hx, hy - 1];
                 break;
 
             case "D":
-                this.squeue.enqueue([hx + 1, hy]);
                 this.head = [hx + 1, hy];
                 break;
         }
+        this.squeue.enqueue([this.head[0], this.head[1]]);
         let tail;
 
         // check if apple is eaten
@@ -76,7 +73,7 @@ const GameStates = {
     NOT_STARTED: "Game not started yet",
     STARTED: "Game is in play",
     ENDED: "Game has ended"
-}
+};
 
 class Game {
     constructor(n) {
@@ -86,10 +83,6 @@ class Game {
 
     reset() {
         this.board = [...new Array(this.n)].map(() => new Array(this.n).fill("-"));
-        // for (let i = 0; i < this.n; i++) {
-        //     let row = ;
-        //     this.board.push(row);
-        // }
 
         this.snake = new Snake(this);
         this.gameState = GameStates.NOT_STARTED;
@@ -97,14 +90,9 @@ class Game {
         // reset tiles on page
         let allTiles = document.getElementsByClassName("snakeBody");
         [...allTiles].forEach(e => e.classList.remove("snakeBody"));
-        // while (allTiles.length > 0) {
-        //     allTiles[0].classList.remove("snakeBody");
-        // }
 
         let appleTiles = document.getElementsByClassName("apple");
-        while (appleTiles.length > 0) {
-            appleTiles[0].classList.remove("apple");
-        }
+        [...appleTiles].forEach(e => e.classList.remove("apple"));
 
         this.apple = this.newAppleLoc();
         this.debug();
