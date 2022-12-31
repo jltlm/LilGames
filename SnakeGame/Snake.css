@@ -1,0 +1,24 @@
+.board {
+    display: flex;
+    box-sizing: border-box;
+}
+
+.row {
+    height: 42px;
+}
+
+.tile {
+    margin: 1px;
+    width: 40px;
+    height: 40px;
+    background-color: lightskyblue;
+    display: inline-block;
+}
+
+.apple {
+    background-color: red;
+}
+
+.snakeBody {
+    background-color: green;
+}
