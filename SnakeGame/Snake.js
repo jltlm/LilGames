@@ -78,7 +78,7 @@ const GameStates = {
 class Game {
     constructor(n) {
         this.n = n;
-        this.ticInterval = 200;
+        this.ticInterval = 150;
     }
 
     reset() {
@@ -99,7 +99,8 @@ class Game {
 
         // keeps the interval to clear it at end of game,
         // otherwise game speeds up on each reset
-        // use function() so it's for the snake and not hte window...?
+        // use function() so it's for the snake and not the window...?
+        clearInterval(this.interval);
         this.interval = setInterval(function () {
             game.snake.move();
         }, this.ticInterval);
@@ -218,6 +219,3 @@ function start() {
     game.gameState = GameStates.STARTED;
     pageMessages.innerHTML = "Game State: " + game.gameState;
 }
-
-// make sure not every key murders snake
-// 
